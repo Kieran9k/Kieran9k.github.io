@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>KHRTG url changer</title>
+  <style>
+    body{font-family:sans-serif;margin:0;background:#f0f0f0;}
+    .top-bar{background:#000;color:#fff;padding:10px;display:flex;align-items:center;gap:10px;}
+    .top-bar input{flex:1;padding:8px;font-size:16px;border:none;border-radius:4px;}
+    .file-input{display:none;}
+    .embed-bar{background:#222;color:#fff;padding:10px;display:flex;align-items:center;gap:10px;}
+    .embed-bar input{flex:1;padding:8px;font-size:16px;border:none;border-radius:4px;}
+    .embed-container{padding:10px;display:flex;justify-content:center;}
+    iframe{width:80%;height:400px;border:1px solid #ccc;border-radius:8px;}
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <input type="text" id="titleInput" placeholder="Type a new title" value="KHRTG url changer">
+    <input type="text" id="faviconInput" placeholder="Paste favicon URL">
+    <button id="faviconFileBtn">Add File</button>
+    <input type="file" id="faviconFile" class="file-input" accept="image/*">
+  </div>
+  <div class="embed-bar">
+    <input type="text" id="embedInput" placeholder="Paste URL to embed">
+    <button id="loadEmbedBtn">Load Embed</button>
+  </div>
+  <div class="embed-container" id="embedContainer">
+    <!-- Embedded content appears here -->
+  </div>
+
+<script>
+  const titleInput = document.getElementById('titleInput');
+  const faviconInput = document.getElementById('faviconInput');
+  const faviconFileBtn = document.getElementById('faviconFileBtn');
+  const faviconFile = document.getElementById('faviconFile');
+  const embedInput = document.getElementById('embedInput');
+  const loadEmbedBtn = document.getElementById('loadEmbedBtn');
+  const embedContainer = document.getElementById('embedContainer');
+
+  let link = document.createElement('link');
+  link.rel = 'icon';
+  document.head.appendChild(link);
+
+  // Set initial title
+  document.title = titleInput.value;
+
+  titleInput.addEventListener('input', () => {
+    document.title = titleInput.value;
+  });
+
+  faviconInput.addEventListener('input', () => {
+    link.href = faviconInput.value;
+  });
+
+  faviconFileBtn.addEventListener('click', () => faviconFile.click());
+
+  faviconFile.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if(file){
+      const reader = new FileReader();
+      reader.onload = (ev) => { link.href = ev.target.result; faviconInput.value = ''; };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  loadEmbedBtn.addEventListener('click', () => {
+    const url = embedInput.value.trim();
+    if(url){
+      embedContainer.innerHTML = `<iframe src="${url}" allowfullscreen></iframe>`;
+    }
+  });
+</script>
+</body>
+</html>
